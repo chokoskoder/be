@@ -1,0 +1,31 @@
+router.get('/expenses', async (req, res) => {
+    try {
+        const { type, date, minValue, maxValue, expenseName } = req.query;
+        let query = {};
+
+        // Build query object based on provided parameters
+        if (type) query.type = type;
+        if (expenseName) query.expenseName = new RegExp(expenseName, 'i'); // Case-insensitive search
+        if (date) query.date = new Date(date);
+        if (minValue || maxValue) {
+            query.value = {};
+            if (minValue) query.value.$gte = Number(minValue);
+            if (maxValue) query.value.$lte = Number(maxValue);
+        }
+
+        const expenses = await expense.find(query)
+            .sort({ date: -1 })
+            .limit(req.query.limit ? Number(req.query.limit) : 50);
+
+        res.json({
+            success: true,
+            count: expenses.length,
+            data: expenses
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
