@@ -2,12 +2,11 @@ const express = require('express');
 const expense = require('../models/expense.model');
 const router = express()
 
+const  validateExpense = require('../middleware/validations.js')
+
 router.use(express.json())
 
-let expenses = 100;
-
-
-router.post('/add', async (req, res) => {
+router.post('/add', validateExpense ,  async (req, res) => {
     try {
         const { expenseName, value, date, type , status} = req.body;
 
@@ -41,11 +40,10 @@ router.get('/show' , async (req,res)=>{
 
         let query = {};
 
-        //build the query based on what has been passed :
+        // build the query based on what has been passed :
         if(type) query.type = type;
         if(expenseName) query.expenseName = new RegExp(expenseName , 'i'); //case insensitive
         if (date) query.date = new Date(date);
-        else query.date = new Date.now();
         if(minValue || maxValue){
             query.value = {};
             if (minValue) query.value.$gte = Number(minValue);
@@ -54,9 +52,8 @@ router.get('/show' , async (req,res)=>{
         if(status) query.status = status;
 
         const expenses = await expense.find(query)
-        .sort({date : 1});
+        // .sort({date : 1});
         // .limit(req.query.limit ? Number(req.query.limit) : 50);  understand and then implement 
-
         res.status(200).send({message : expenses});
 
 
@@ -103,7 +100,7 @@ router.put('/update/:expenseName' , async (req,res)=>{
     }
 
 })
-//delete 
+//i wish to create a way to ask the user if he is sure about deleting the particular expense or not ? FRONTEND will be used here i guess
 router.delete('/delete' , (req , res)=>{
     //TODO ; delete expenses 
 

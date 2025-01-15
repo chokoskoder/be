@@ -23,7 +23,7 @@ const expenseSchema = new mongoose.Schema({
         type : String,
         requre : true,
         default : 'paid',
-        enum : ['not-opaid' , 'paid']
+        enum : ['not-paid' , 'paid']
         
     }
 })
