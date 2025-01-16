@@ -19,9 +19,11 @@ connectDB()
     console.log(error);
 })
 
+
+
 app.get('/' , (req , res)=>{
     console.log("Hello this server works fine")
-    res.send({message : "wowzies this works"})
+    res.status(500).send({message : "wowzies this works UPDATE THE ROUTE"  })
 })
 
 try {

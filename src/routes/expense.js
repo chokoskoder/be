@@ -106,4 +106,14 @@ router.delete('/delete' , (req , res)=>{
 
 })
 
+router.delete('/deleteALL' , async (req , res) =>{
+    try{
+        const deleted = await expense.deleteMany();
+        res.status(200).send({message : "deleted ALL successfully" , deleted})
+    }
+    catch(err){
+        res.status(500).send({message : "error occured while deleting expenses" , err})
+    }
+})
+
 module.exports = router;
